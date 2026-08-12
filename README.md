@@ -1,10 +1,35 @@
 # [VIA Web Application](https://usevia.app) - Your keyboards best friend
 
+> **About this fork:** This fork exists to provide VIA support and EC diagnostic tools for the KBDFans Agar Mini EC. See [Agar Mini EC tools](#agar-mini-ec-tools) for setup instructions.
+
 ![android-chrome-192x192](https://user-images.githubusercontent.com/1714072/222621960-ddfb8ee6-a486-4c66-8852-b204ba7c807b.png)
 
-[![Azure Static Web Apps CI/CD](https://github.com/the-via/app/actions/workflows/azure.yml/badge.svg)](https://github.com/the-via/app/actions/workflows/azure.yml)
-
 VIA is a powerful, open-source web-based interface for configuring your [QMK](https://qmk.fm)-powered mechanical keyboard. It allows you to customize your keymaps, create macros, and adjust RGB settings (if it has RGB) on the fly, without needing to recompile your keyboard's firmware. This makes keyboard customization easier and more accessible for everyone.
+
+## Agar Mini EC tools
+
+This branch adds built-in support for the KBDFans Agar Mini EC (VID `0x9D5B`, PID `0x2509`), including regular VIA remapping and an **EC Tools** panel for adjusting EC sensitivity and viewing live per-key ADC values. The panel can help diagnose delayed or out-of-order key presses; the [full investigation and firmware-fix walkthrough](https://habr.com/ru/articles/1056772/) explains the underlying issue.
+
+![Agar Mini EC Tools showing live per-key ADC values in VIA](https://habrastorage.org/r/w1560/getpro/habr/upload_files/9e0/934/8db/9e09348db363d322608422cd8f3a02d4.png)
+
+### Run locally
+
+Install [Node.js 18 or newer](https://nodejs.org/), then run:
+
+```bash
+git clone --branch dumch/local https://github.com/D00mch/app.git
+cd app
+npm install
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) in a WebHID-capable browser such as Chrome or Edge.
+
+### Set up the keyboard
+
+1. Connect the Agar Mini EC over USB, click **Authorize device**, and select the keyboard. Its definition is bundled with this branch, so no JSON import is required.
+2. Open **EC Tools**, press every key through its full travel, and inspect the live ADC values. Use **EC Sensitivity** to choose a suitable actuation level.
+3. If fast presses are still delayed or arrive out of order and many fully pressed keys report values at or above the stock firmware's `160` cutoff, follow the firmware-patching and flashing steps in the [walkthrough](https://habr.com/ru/articles/1056772/). The EC Tools panel itself does not patch or calibrate the firmware, and the byte offset described in the article is specific to the firmware revision analyzed there.
 
 ## Getting VIA to support your keyboard
 
